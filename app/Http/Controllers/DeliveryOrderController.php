@@ -26,7 +26,7 @@ class DeliveryOrderController extends Controller
     public function create()
     {
         $companys = Dealer::select('id', 'company_name')->get();
-        $models = Product::select('id', 'model')->get();
+        $models = Product::select('id', 'model')->groupBy('model')->get();
         return view('pages.do.create', ['models' => $models, 'companys' => $companys]);
     }
 
@@ -41,6 +41,12 @@ class DeliveryOrderController extends Controller
         $model = Product::select('model')->where('id', $id)->first();
         $sizes = Product::select('id', 'model', 'size')->where('model', '=', $model->model)->get();
         return response()->json(['sizes' => $sizes], 200);
+    }
+
+    public function search_product_price($id)
+    {
+        $price = Product::select('id', 'price', 'discount', 'net_price')->where('id', '=', $id)->first();
+        return response()->json(['price' => $price], 200);
     }
 
     /**

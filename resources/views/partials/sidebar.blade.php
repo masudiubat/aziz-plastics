@@ -36,27 +36,30 @@
         <ul class="kt-menu__nav ">
             <li class="kt-menu__item " aria-haspopup="true"><a href="{{route('home')}}" class="kt-menu__link "><i class="kt-menu__link-icon flaticon-home"></i><span class="kt-menu__link-text">Dashboard</span></a></li>
 
+            @hasanyrole('sales manager|admin|sr')
             <li class="kt-menu__section ">
                 <h4 class="kt-menu__section-text">PRIMARY</h4>
                 <i class="kt-menu__section-icon flaticon-more-v2"></i>
             </li>
-            <li class="{{ request()->routeIs('delivery-order*') ? 'kt-menu__item kt-menu__item--here' : 'kt-menu__item' }}" aria-haspopup="true"><a href="{{route('delivery.order.create')}}" class="kt-menu__link"><i class="kt-menu__link-icon flaticon2-list"></i><span class="kt-menu__link-text">New DO</span></a></li>
-
+            @hasanyrole('sales manager|admin|sr')<li class="{{ request()->routeIs('delivery-order*') ? 'kt-menu__item kt-menu__item--here' : 'kt-menu__item' }}" aria-haspopup="true"><a href="{{route('delivery.order.create')}}" class="kt-menu__link"><i class="kt-menu__link-icon flaticon2-list"></i><span class="kt-menu__link-text">New DO</span></a></li>@endhasanyrole
+            @endhasanyrole
+            @hasanyrole('sales manager|admin')
             <li class="kt-menu__section ">
                 <h4 class="kt-menu__section-text">AUXILIARY</h4>
                 <i class="kt-menu__section-icon flaticon-more-v2"></i>
             </li>
-            <li class="{{ request()->routeIs('product*') ? 'kt-menu__item kt-menu__item--here' : 'kt-menu__item' }}" aria-haspopup="true"><a href="{{route('product.index')}}" class="kt-menu__link"><i class="kt-menu__link-icon flaticon2-safe"></i><span class="kt-menu__link-text">Products</span></a></li>
-            <li class="{{ request()->routeIs('dealer*') ? 'kt-menu__item kt-menu__item--here' : 'kt-menu__item' }}" aria-haspopup="true"><a href="{{route('dealer.index')}}" class="kt-menu__link"><i class="kt-menu__link-icon flaticon-customer"></i><span class="kt-menu__link-text">Dealers</span></a></li>
-
-
+            @hasanyrole('sales manager|admin')<li class="{{ request()->routeIs('product*') ? 'kt-menu__item kt-menu__item--here' : 'kt-menu__item' }}" aria-haspopup="true"><a href="{{route('product.index')}}" class="kt-menu__link"><i class="kt-menu__link-icon flaticon2-safe"></i><span class="kt-menu__link-text">Products</span></a></li>@endhasanyrole
+            @hasanyrole('sales manager|admin')<li class="{{ request()->routeIs('dealer*') ? 'kt-menu__item kt-menu__item--here' : 'kt-menu__item' }}" aria-haspopup="true"><a href="{{route('dealer.index')}}" class="kt-menu__link"><i class="kt-menu__link-icon flaticon-customer"></i><span class="kt-menu__link-text">Dealers</span></a></li>@endhasanyrole
+            @endhasanyrole
+            @hasrole('admin')
             <!-- //End menu items for Others -->
             <li class="kt-menu__section ">
                 <h4 class="kt-menu__section-text">ADMIN TOOLS</h4>
                 <i class="kt-menu__section-icon flaticon-more-v2"></i>
             </li>
-            <li class="{{ request()->routeIs('user*') ? 'kt-menu__item kt-menu__item--here' : 'kt-menu__item' }}" aria-haspopup="true"><a href="{{route('user.index')}}" class="kt-menu__link"><i class="kt-menu__link-icon flaticon-users-1"></i><span class="kt-menu__link-text">User Management</span></a></li>
-            <li class="{{ request()->routeIs('designation*') ? 'kt-menu__item kt-menu__item--here' : 'kt-menu__item' }}" aria-haspopup="true"><a href="{{route('designation.index')}}" class="kt-menu__link"><i class="kt-menu__link-icon flaticon2-position"></i><span class="kt-menu__link-text">Designations</span></a></li>
+            @hasrole('admin') <li class="{{ request()->routeIs('user*') ? 'kt-menu__item kt-menu__item--here' : 'kt-menu__item' }}" aria-haspopup="true"><a href="{{route('user.index')}}" class="kt-menu__link"><i class="kt-menu__link-icon flaticon-users-1"></i><span class="kt-menu__link-text">User Management</span></a></li>@endhasrole
+            @hasrole('admin') <li class="{{ request()->routeIs('designation*') ? 'kt-menu__item kt-menu__item--here' : 'kt-menu__item' }}" aria-haspopup="true"><a href="{{route('designation.index')}}" class="kt-menu__link"><i class="kt-menu__link-icon flaticon2-position"></i><span class="kt-menu__link-text">Designations</span></a></li>@endhasrole
+            @endhasrole
         </ul>
     </div>
 </div>

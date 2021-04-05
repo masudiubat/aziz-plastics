@@ -66,6 +66,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::delete('/user/{id}', 'UserController@destroy')->name('user.destroy')->middleware(['role:admin']);
 
     /**
+     * All User Role Related Routes
+     */
+    Route::get('role/user', 'UserRoleController@index')->name('role.user.index')->middleware(['role:admin']);
+    /**
      * All Designation Related Routes
      */
     Route::get('/designation', 'DesignationController@index')->name('designation.index')->middleware(['role:admin']);

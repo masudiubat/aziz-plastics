@@ -38,7 +38,9 @@
                                     <option value="{{$company->id}}">{{$company->company_name}}</option>
                                     @endforeach
                                     @endif
-                                </select>
+                                    <option value="new_company" id="newCompany">New</option>
+                                </select><br />
+                                <input type="text" name="new_company_name" value="{{old('new_company_name')}}" id="newCompanyName" class="form-control newCompanyName" placeholder="New Company Name" style="display:none">
                             </div>
                             <div class="col-lg-6">
                                 <label>Address:</label>
@@ -102,17 +104,17 @@
                         <div class="form-group row">
                             <div class="col-lg-8">
                                 <label><strong>Remark:</strong></label>
-                                <textarea class="form-control" id="remark" name="remark" rows="4"></textarea>
+                                <textarea class="form-control" id="remark" name="remark" rows="8"></textarea>
                             </div>
-                            <div class="col-lg-2">
-                                <label><strong>Total:</strong></label>
-                                <label><strong>Discount (%):</strong></label>
-                                <label><strong>Net Total:</strong></label>
-                            </div>
-                            <div class="col-lg-2">
-                                <div class="total" id="total"></div>
+                            <div class="col-lg-4">
+                                <label>Total:</label>
+                                <input type="text" name="total" id="total" class="form-control total" placeholder="Total" readonly="readonly">
+                                <br />
+                                <label>Discount (%):</label>
                                 <input type="text" name="discount" value="{{old('discount')}}" id="discount" class="form-control discount" placeholder="Discount">
-                                <div class="netTotal" id="netTotal"></div>
+                                <br />
+                                <label>Net Total:</label>
+                                <input type="text" name="net_total" id="netTotal" class="form-control netTotal" placeholder="Net Total" readonly="readonly">
                             </div>
                         </div>
                     </div>
@@ -177,13 +179,14 @@
 @push('js')
 <script src="{{ asset('assets/js/pages/crud/forms/widgets/bootstrap-datepicker.js')}}" type="text/javascript"></script>
 
-<script type="text/javascript">
-    $("#discount").change(function() {
-        var discount = $('#discount').val();
-        var price = $('#price').val();
-        var discountValue = (discount / 100) * price;
-        var netPrice = price - discountValue;
-        $("#net_price").val(netPrice);
+<script>
+    $("input[name='company_name']").click(function() {
+        console.log('in');
+        if ($("#newCompany").is(":checked")) {
+            $("#newCompanyName").show();
+        } else {
+            $("#newCompanyName").hide();
+        }
     });
 </script>
 <script>
@@ -208,6 +211,11 @@
 
         //remove item from list
         $("body").on("click", ".remove", function() {
+            _parent = $(this).parents('.itemGroup');
+            var amount = _parent.children().children().children('.amount').val();
+            totalAmount = totalAmount - amount;
+            $('#total').attr('value', totalAmount);
+            $('#netTotal').attr('value', totalAmount);
             $(this).parents(".itemGroup").remove();
         });
 
@@ -242,8 +250,6 @@
                     _parent.children().children().children('.price').empty();
                     _parent.children().children().children('.amount').empty();
                     _parent.children().children().children('.price').attr('value', data.price.net_price);
-                    _parent.children().children().children('.amount').attr('value', data.price.net_price);
-                    totalAmount = totalAmount + data.price.net_price;
                 });
             }
         });
@@ -252,24 +258,37 @@
         $('body').on('change', '.itemGroup .quantityGroup', function(ev) {
             _parent = $(this).parents('.itemGroup');
             var quantity = _parent.children().children().children('.quantity').val();
+            var amount = _parent.children().children().children('.amount').val();
             if (quantity !== undefined && quantity != '') {
                 var price = _parent.children().children().children('.price').val();
                 var amount = quantity * price;
                 _parent.children().children().children('.amount').attr('value', amount);
+                //totalAmount = totalAmount + amount;
+                totalAmount = 0;
+                var amountArray = $("input[name='amount[]']")
+                    .map(function() {
+                        return $(this).val();
+                    }).get();
 
+                for (var i = 0; i < amountArray.length; i++) {
+                    totalAmount += amountArray[i] << 0;
+                }
+                $('#total').attr('value', totalAmount);
+                $('#netTotal').attr('value', totalAmount);
             }
         });
 
-
-
+        $('body').on('change', '.discount', function(ev) {
+            var discount = $('#discount').val();
+            if (discount !== undefined && discount != '') {
+                var total = $('#total').val();
+                var discountValue = (discount / 100) * total;
+                var netPrice = total - discountValue;
+                $("#netTotal").val(netPrice);
+            }
+        });
 
     });
 </script>
 
-<script type="text/javascript">
-    $(".amount").change(function() {
-        var amount = $('.amount').val();
-        console.log("Amount: " + amount);
-    });
-</script>
 @endpush

@@ -113,6 +113,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/search/product/price/{id}', 'DeliveryOrderController@search_product_price')->name('search.product.price')->middleware(['role:admin|sales manager|sr']);
     Route::get('/order/payment/detail/{id}', 'DeliveryOrderController@payment_detail')->name('order.payment.detail')->middleware(['role:admin|sales manager|sr']);
     Route::post('/order/payment/detail/store', 'DeliveryOrderController@payment_detail_store')->name('order.payment.detail.store')->middleware(['role:admin|sales manager|sr']);
+
+    /**
+     * All Notifications Related Routes
+     */
+    Route::get('/ajax/get/notifications', 'NotificationController@get_notifications')->name('ajax.get.notifications');
+    Route::get('/ajax/all/new/orders', 'NotificationController@all_new_orders')->name('ajax.all.new.orders');
+    Route::get('/ajax/order/show/{id}', 'NotificationController@show')->name('ajax.order.show');
 });
 
 Auth::routes();

@@ -24,7 +24,11 @@ class CreatePurchasesTable extends Migration
             $table->integer('discount')->nullable();
             $table->integer('net_amount');
             $table->integer('paid_amount')->nullable();
-            $table->string('status')->nullable();
+            $table->tinyInteger('dsm_status')->default('0');
+            $table->tinyInteger('sdsm_status')->default('0');
+            $table->tinyInteger('account_status')->default('0');
+            $table->tinyInteger('gm_ed_status')->default('0');
+            $table->tinyInteger('factory_status')->default('0');
             $table->timestamps();
 
             $table->foreign('sdsm_id')->references('id')->on('users')->onDelete('set null');

@@ -4,6 +4,7 @@ namespace App;
 
 use App\User;
 use App\Dealer;
+use App\Purchase;
 use App\OrderDetail;
 use Illuminate\Database\Eloquent\Model;
 
@@ -33,5 +34,10 @@ class Order extends Model
     public function order_details()
     {
         return $this->hasMany(OrderDetail::class);
+    }
+
+    public function purchase()
+    {
+        return $this->hasOne(Purchase::class);
     }
 }

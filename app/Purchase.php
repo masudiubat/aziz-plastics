@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Order;
 use Illuminate\Database\Eloquent\Model;
 
 class Purchase extends Model
@@ -41,5 +42,10 @@ class Purchase extends Model
     public function sdsm()
     {
         return $this->belongsTo(User::class, 'sdsm_id', 'id');
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 }

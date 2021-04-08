@@ -58,5 +58,4 @@
     gtag('js', new Date());
     gtag('config', 'UA-37564768-1');
 </script>
-
 @stack('css')

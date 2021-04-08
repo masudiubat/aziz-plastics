@@ -89,6 +89,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
         <!-- begin::Global Config(global config for global JS sciprts) -->
         @include('partials.default-js')
+        @include('partials.manage-notifications')
 </body>
 <!-- end::Body -->
 

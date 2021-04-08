@@ -19,6 +19,7 @@ class CreatePurchasesTable extends Migration
             $table->unsignedBigInteger('dsm_id')->index()->nullable();
             $table->unsignedBigInteger('sr_id')->index()->nullable();
             $table->unsignedBigInteger('dealer_id')->index()->nullable();
+            $table->unsignedBigInteger('order_id')->index()->nullable();
             $table->integer('total_amount');
             $table->integer('discount')->nullable();
             $table->integer('net_amount');
@@ -30,6 +31,7 @@ class CreatePurchasesTable extends Migration
             $table->foreign('dsm_id')->references('id')->on('users')->onDelete('set null');
             $table->foreign('sr_id')->references('id')->on('users')->onDelete('set null');
             $table->foreign('dealer_id')->references('id')->on('dealers')->onDelete('cascade');
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('set null');
         });
     }
 

@@ -62,16 +62,35 @@
             <table class="kt-datatable" id="html_table" width="100%">
                 <thead>
                     <tr>
-                        <th title="Field #1">Name</th>
+                        <th title="Field #1">User Name</th>
                         <th title="Field #2">ID</th>
-                        <th title="Field #3">Email</th>
-                        <th title="Field #4">Phone</th>
-                        <th title="Field #5">Designation</th>
-                        <th title="Field #6">Action</th>
+                        <th title="Field #3">Designation</th>
+                        <th title="Field #4">Role</th>
+                        <th title="Field #5">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-
+                    @foreach($users as $user)
+                    @if($user->user_id != 1)
+                    <tr>
+                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->user_id }}</td>
+                        <td>@if(!is_null($user->designation)){{ $user->designation->short_name }}@endif</td>
+                        <td>
+                            @if(!is_null($user->roles))
+                            @foreach($user->roles as $role)
+                            {{ $role->name }}
+                            @endforeach
+                            @endif
+                        </td>
+                        <td>
+                            <a onclick="event.preventDefault(); editUser('{{ $user->id }}');" href="#" title="Edit" data-placement="top" data-toggle="tooltip" data-original-title="Edit" class="btn btn-xs tooltips btn-clean">
+                                <i class="la la-edit"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    @endif
+                    @endforeach
                 </tbody>
             </table>
             <!--end: Datatable -->
@@ -83,12 +102,12 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="padding:5px;">
-                    <h5 class="modal-title" id="exampleModalLabel">Add New User</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Add Role to New User</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
                 <!--begin::Form-->
-                <form class="kt-form" action="{{ route('user.store') }}" method="POST">
+                <form class="kt-form" action="{{ route('role.user.store') }}" method="POST">
                     @csrf
                     <div class="modal-body" style="padding:0px;">
                         <!--begin::Portlet-->
@@ -96,85 +115,28 @@
                             <div class="kt-portlet__body" style="padding: 0px 10px;">
                                 <div class="form-group row">
                                     <div class="col-lg-6">
-                                        <label>Name <span class="text-danger"> * </span></label>
-                                        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" aria-describedby="nameHelp" placeholder="Full Name" required>
-                                        @error('name')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <label>Email <span class="text-danger"> * </span></label>
-                                        <input type="text" name="email" class="form-control @error('email') is-invalid @enderror" aria-describedby="emailHelp" placeholder="Email" required>
-                                        @error('email')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <div class="col-lg-6">
-                                        <label>Phone <span class="text-danger"> * </span></label>
-                                        <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror" aria-describedby="phoneHelp" placeholder="Phone" required>
-                                        @error('phone')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                    <div class="col-lg-6">
-
-                                    </div>
-
-                                </div>
-
-                                <div class="form-group row">
-                                    <div class="col-lg-6">
-                                        <label>Supervisor</label>
-                                        <select id="supervisor" name="supervisor" class="form-control @error('supervisor') is-invalid @enderror">
-
+                                        <label class="">Select User Name:</label>
+                                        <select id="userName" name="user" class="form-control @error('user') is-invalid @enderror" required>
+                                            <option value="">Select User Name</option>
+                                            @if(!is_null($usersWithoutAnyRoles))
+                                            @foreach($usersWithoutAnyRoles as $user)
+                                            <option value="{{$user->id}}">{{$user->name}} - ({{$user->user_id }})</option>
+                                            @endforeach
+                                            @endif
                                         </select>
-                                        @error('supervisor')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
                                     </div>
                                     <div class="col-lg-6">
-                                        <label>User Id <span class="text-danger"> * </span></label>
-                                        <input type="text" name="user_id" class="form-control @error('user_id') is-invalid @enderror" aria-describedby="userIdHelp" placeholder="User ID" required>
-                                        @error('user_id')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
+                                        <label class="">Select Role:</label>
+                                        <select id="role" name="role" class="form-control @error('role') is-invalid @enderror" required>
+                                            <option value="">Select Role</option>
+                                            @if(!is_null($roles))
+                                            @foreach($roles as $role)
+                                            <option value="{{$role->id}}">{{$role->name}}</option>
+                                            @endforeach
+                                            @endif
+                                        </select>
                                     </div>
                                 </div>
-
-                                <div class="form-group row">
-                                    <div class="col-lg-6">
-                                        <label>Password <span class="text-danger"> * </span></label>
-                                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" aria-describedby="passwordHelp" placeholder="Password" required>
-                                        @error('password')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <label>Password Confirmation <span class="text-danger"> * </span></label>
-                                        <input type="password" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" aria-describedby="passwordHelp" placeholder="password Confirmation" required>
-                                        @error('password_confirmation')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
                         <!--end::Portlet-->

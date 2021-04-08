@@ -52,7 +52,7 @@ Route::get('/user-role', function () {
 });
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::group(['middleware' => 'auth'], function () {
@@ -69,6 +69,7 @@ Route::group(['middleware' => 'auth'], function () {
      * All User Role Related Routes
      */
     Route::get('role/user', 'UserRoleController@index')->name('role.user.index')->middleware(['role:admin']);
+    Route::post('/role/user/store', 'UserRoleController@store')->name('role.user.store')->middleware(['role:admin']);
     /**
      * All Designation Related Routes
      */
@@ -110,6 +111,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/search/company/details/{id}', 'DeliveryOrderController@search_company_details')->name('search.company.details')->middleware(['role:admin|sales manager|sr']);
     Route::get('/search/product/size/{id}', 'DeliveryOrderController@search_product_size')->name('search.product.size')->middleware(['role:admin|sales manager|sr']);
     Route::get('/search/product/price/{id}', 'DeliveryOrderController@search_product_price')->name('search.product.price')->middleware(['role:admin|sales manager|sr']);
+    Route::get('/order/payment/detail/{id}', 'DeliveryOrderController@payment_detail')->name('order.payment.detail')->middleware(['role:admin|sales manager|sr']);
+    Route::post('/order/payment/detail/store', 'DeliveryOrderController@payment_detail_store')->name('order.payment.detail.store')->middleware(['role:admin|sales manager|sr']);
 });
 
 Auth::routes();

@@ -31,14 +31,14 @@
                         <div class="form-group row">
                             <div class="col-lg-6">
                                 <label class="">Select Company Name:</label>
-                                <select id="companyName" name="company_name" class="form-control @error('company_name') is-invalid @enderror" required>
+                                <select id="kt_select2_1" name="company_name" class="form-control @error('company_name') is-invalid @enderror kt-select2" required>
                                     <option value="">Select Company Name</option>
                                     @if(!is_null($companys))
                                     @foreach($companys as $company)
                                     <option value="{{$company->id}}">{{$company->company_name}}</option>
                                     @endforeach
                                     @endif
-                                    <option value="new_company" id="newCompany">New</option>
+                                    <option value="new_company" id="newCompany">New Company</option>
                                 </select><br />
                                 <input type="text" name="new_company_name" value="{{old('new_company_name')}}" id="newCompanyName" class="form-control newCompanyName" placeholder="New Company Name" style="display:none">
                             </div>
@@ -180,12 +180,21 @@
 <script src="{{ asset('assets/js/pages/crud/forms/widgets/bootstrap-datepicker.js')}}" type="text/javascript"></script>
 
 <script>
-    $("input[name='company_name']").click(function() {
-        console.log('in');
-        if ($("#newCompany").is(":checked")) {
+    $('#kt_select2_1').on('change', function() {
+        var company = $('#kt_select2_1').val();
+        if (company == 'new_company') {
             $("#newCompanyName").show();
         } else {
             $("#newCompanyName").hide();
+            var url = "{{url('/search/company/details')}}/" + company;
+            $.ajax({
+                url: url,
+                method: "GET",
+            }).done(function(data) {
+                $('#address').attr('value', data.company.address);
+                $('#phone').attr('value', data.company.phone);
+                $('#dealerCode').attr('value', data.company.dealer_code);
+            });
         }
     });
 </script>
@@ -287,8 +296,6 @@
                 $("#netTotal").val(netPrice);
             }
         });
-
     });
 </script>
-
 @endpush
